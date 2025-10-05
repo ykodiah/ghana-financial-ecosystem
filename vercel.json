@@ -1,39 +1,23 @@
 {
   "version": 2,
   "name": "ghana-financial-ecosystem",
-  "builds": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "npm run install:all",
+  "framework": "vite",
+  "rewrites": [
     {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "backend/src/server.js",
-      "use": "@vercel/node"
+      "source": "/api/(.*)",
+      "destination": "/api/backend"
     }
   ],
-  "routes": [
+  "redirects": [
     {
-      "src": "/api/(.*)",
-      "dest": "/backend/src/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
     }
   ],
-  "env": {
-    "NODE_ENV": "production",
-    "REACT_APP_API_URL": "@react_app_api_url",
-    "REACT_APP_ENVIRONMENT": "@react_app_environment"
-  },
-  "functions": {
-    "backend/src/server.js": {
-      "maxDuration": 30
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",
@@ -74,17 +58,7 @@
       ]
     }
   ],
-  "redirects": [
-    {
-      "source": "/home",
-      "destination": "/",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/backend/src/server.js"
-    }
-  ]
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
