@@ -15,9 +15,37 @@ import {
   XCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import PaymentModal from '../components/Payment/PaymentModal';
+import { useAuth } from '../contexts/AuthContext';
 
 const Pricing = () => {
   const [isAnnual, setIsAnnual] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const { user, isDemoUser } = useAuth();
+
+  const handlePlanSelect = (plan) => {
+    if (isDemoUser) {
+      // Demo users can't make real payments
+      alert('Demo users cannot make real payments. Please create a real account to subscribe.');
+      return;
+    }
+    
+    if (!user) {
+      // Redirect to login if not authenticated
+      window.location.href = '/login';
+      return;
+    }
+    
+    setSelectedPlan(plan);
+    setIsPaymentModalOpen(true);
+  };
+
+  const handlePaymentSuccess = (plan) => {
+    // Handle successful payment
+    console.log('Payment successful for plan:', plan.name);
+    // Here you would typically update the user's subscription status
+  };
 
   const plans = [
     {
@@ -158,6 +186,23 @@ const Pricing = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
+      {/* Demo Banner */}
+      {isDemoUser && (
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5" />
+                <span className="font-semibold">Demo Mode</span>
+              </div>
+              <div className="hidden sm:block text-purple-100">
+                You're viewing pricing as a demo user. Create a real account to make payments.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -267,13 +312,13 @@ const Pricing = () => {
                   ))}
                 </div>
 
-                <Link
-                  to={plan.price.monthly === 0 ? '/register' : '/register'}
+                <button
+                  onClick={() => handlePlanSelect(plan)}
                   className={`w-full ${plan.buttonColor} text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2`}
                 >
                   {plan.price.monthly === 0 ? 'Get Started Free' : 'Choose Plan'}
                   <ArrowRight className="w-4 h-4" />
-                </Link>
+                </button>
               </div>
             </motion.div>
           ))}
@@ -388,6 +433,19 @@ const Pricing = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Payment Modal */}
+      {selectedPlan && (
+        <PaymentModal
+          isOpen={isPaymentModalOpen}
+          onClose={() => {
+            setIsPaymentModalOpen(false);
+            setSelectedPlan(null);
+          }}
+          plan={selectedPlan}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </div>
   );
 };

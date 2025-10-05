@@ -14,12 +14,18 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Eye,
-  EyeOff
+  EyeOff,
+  Play,
+  Star,
+  Crown,
+  Sparkles
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 
 const Dashboard = () => {
   const [showBalance, setShowBalance] = React.useState(true);
+  const { user, isDemoUser, DEMO_CREDENTIALS } = useAuth();
   
   const quickActions = [
     {
@@ -52,7 +58,48 @@ const Dashboard = () => {
     }
   ];
 
-  const recentTransactions = [
+  const recentTransactions = isDemoUser ? [
+    {
+      id: 1,
+      type: "received",
+      amount: 500,
+      description: "Payment from Kwame Asante",
+      time: "2 hours ago",
+      status: "completed"
+    },
+    {
+      id: 2,
+      type: "sent",
+      amount: 200,
+      description: "Transfer to Ama Serwaa",
+      time: "1 day ago",
+      status: "completed"
+    },
+    {
+      id: 3,
+      type: "bill",
+      amount: 150,
+      description: "ECG Electricity Bill",
+      time: "2 days ago",
+      status: "completed"
+    },
+    {
+      id: 4,
+      type: "airtime",
+      amount: 50,
+      description: "MTN Airtime Purchase",
+      time: "3 days ago",
+      status: "completed"
+    },
+    {
+      id: 5,
+      type: "investment",
+      amount: 1000,
+      description: "Government Bond Investment",
+      time: "1 week ago",
+      status: "completed"
+    }
+  ] : [
     {
       id: 1,
       type: "received",
@@ -87,7 +134,32 @@ const Dashboard = () => {
     }
   ];
 
-  const investments = [
+  const investments = isDemoUser ? [
+    {
+      name: "Government Bonds",
+      amount: 5000,
+      return: 12.5,
+      status: "active"
+    },
+    {
+      name: "Fixed Deposit",
+      amount: 3000,
+      return: 8.0,
+      status: "active"
+    },
+    {
+      name: "Stock Portfolio",
+      amount: 2500,
+      return: 15.2,
+      status: "active"
+    },
+    {
+      name: "Crypto Investment",
+      amount: 1000,
+      return: 22.8,
+      status: "active"
+    }
+  ] : [
     {
       name: "Government Bonds",
       amount: 5000,
@@ -112,6 +184,8 @@ const Dashboard = () => {
         return <CreditCard className="w-5 h-5 text-blue-500" />;
       case "airtime":
         return <Smartphone className="w-5 h-5 text-purple-500" />;
+      case "investment":
+        return <TrendingUp className="w-5 h-5 text-indigo-500" />;
       default:
         return <CreditCard className="w-5 h-5 text-gray-500" />;
     }
@@ -119,13 +193,44 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Demo Banner */}
+      {isDemoUser && (
+        <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Play className="w-5 h-5" />
+                  <span className="font-semibold">Demo Mode</span>
+                </div>
+                <div className="hidden sm:block text-purple-100">
+                  You're exploring with sample data. All features are fully functional!
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="w-4 h-4 text-yellow-300 fill-current" />
+                <span className="text-sm font-medium">Premium Features Unlocked</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-              <p className="text-gray-600">Welcome back, Kwame!</p>
+              <p className="text-gray-600">
+                Welcome back, {isDemoUser ? DEMO_CREDENTIALS.name : user?.user_metadata?.full_name || 'User'}!
+                {isDemoUser && (
+                  <span className="ml-2 inline-flex items-center gap-1 text-purple-600 font-medium">
+                    <Crown className="w-4 h-4" />
+                    Demo Account
+                  </span>
+                )}
+              </p>
             </div>
             <div className="flex items-center gap-4">
               <button className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full">
@@ -168,16 +273,22 @@ const Dashboard = () => {
               
               <div className="mb-6">
                 <div className="text-4xl font-bold mb-2">
-                  {showBalance ? "₵2,450.00" : "••••••"}
+                  {showBalance ? (isDemoUser ? "₵15,750.00" : "₵2,450.00") : "••••••"}
                 </div>
                 <div className="flex items-center gap-4 text-green-100">
                   <span className="flex items-center gap-1">
                     <TrendingUp className="w-4 h-4" />
-                    +₵150 this month
+                    {isDemoUser ? "+₵2,500 this month" : "+₵150 this month"}
                   </span>
                   <span>•</span>
                   <span>Last updated: Now</span>
                 </div>
+                {isDemoUser && (
+                  <div className="mt-2 flex items-center gap-2 text-purple-100">
+                    <Sparkles className="w-4 h-4" />
+                    <span className="text-sm">Demo account with enhanced features</span>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-4">
@@ -322,8 +433,8 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-green-600">+₵1,250</p>
-                    <p className="text-sm text-gray-500">+15%</p>
+                    <p className="font-semibold text-green-600">{isDemoUser ? "+₵8,500" : "+₵1,250"}</p>
+                    <p className="text-sm text-gray-500">{isDemoUser ? "+25%" : "+15%"}</p>
                   </div>
                 </div>
                 
@@ -338,8 +449,8 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-red-600">-₵850</p>
-                    <p className="text-sm text-gray-500">-8%</p>
+                    <p className="font-semibold text-red-600">{isDemoUser ? "-₵3,200" : "-₵850"}</p>
+                    <p className="text-sm text-gray-500">{isDemoUser ? "-12%" : "-8%"}</p>
                   </div>
                 </div>
                 
@@ -354,8 +465,8 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-blue-600">32%</p>
-                    <p className="text-sm text-gray-500">₵400 saved</p>
+                    <p className="font-semibold text-blue-600">{isDemoUser ? "45%" : "32%"}</p>
+                    <p className="text-sm text-gray-500">{isDemoUser ? "₵2,400 saved" : "₵400 saved"}</p>
                   </div>
                 </div>
               </div>
