@@ -1,0 +1,93 @@
+{
+  "name": "ghana-financial-ecosystem",
+  "version": "1.0.0",
+  "description": "Ghana's Ultimate Financial Platform - Mobile Money, P2P Lending, Investments & More",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:fix": "npm run lint:fix:frontend && npm run lint:fix:backend",
+    "lint:fix:frontend": "cd frontend && npm run lint:fix",
+    "lint:fix:backend": "cd backend && npm run lint:fix",
+    "install:all": "npm install && npm run install:frontend && npm run install:backend",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && npm install",
+    "clean": "npm run clean:frontend && npm run clean:backend",
+    "clean:frontend": "cd frontend && rm -rf node_modules dist",
+    "clean:backend": "cd backend && rm -rf node_modules dist",
+    "supabase:start": "supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:reset": "supabase db reset",
+    "supabase:status": "supabase status",
+    "supabase:db:push": "supabase db push",
+    "supabase:db:pull": "supabase db pull",
+    "supabase:gen:types": "supabase gen types typescript --local > frontend/src/types/supabase.ts",
+    "supabase:gen:types:remote": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > frontend/src/types/supabase.ts",
+    "deploy:frontend": "cd frontend && vercel --prod",
+    "deploy:backend": "cd backend && vercel --prod",
+    "deploy:all": "npm run deploy:frontend && npm run deploy:backend"
+  },
+  "keywords": [
+    "ghana",
+    "fintech",
+    "mobile-money",
+    "p2p-lending",
+    "investments",
+    "remittances",
+    "africa",
+    "supabase",
+    "react",
+    "nodejs"
+  ],
+  "author": "Ghana Financial Solutions",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.4.5",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ghana-financial-ecosystem.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/ghana-financial-ecosystem/issues"
+  },
+  "homepage": "https://ghanafinancial.com",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  }
+}
