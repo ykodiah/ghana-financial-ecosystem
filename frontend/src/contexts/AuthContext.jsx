@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
+import config from '../config/env';
 
 const AuthContext = createContext({});
 
@@ -19,8 +20,8 @@ export const AuthProvider = ({ children }) => {
 
   // Demo user credentials
   const DEMO_CREDENTIALS = {
-    email: 'demo@ghanafinancial.com',
-    password: 'demo123456',
+    email: config.demo.email,
+    password: config.demo.password,
     name: 'Demo User',
     phone: '+233 24 123 4567'
   };
